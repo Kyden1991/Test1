@@ -1,5 +1,5 @@
 <?php
-$dbc = mysqli_connect('localhost', 'root', '', 'lesson') OR DIE('Ошибка подключения к базе данных');
+$dbc = mysqli_connect('localhost', 'root', '', 'Test2') OR DIE('Ошибка подключения к базе данных');
 if(isset($_POST['submit'])){
     $username = mysqli_real_escape_string($dbc, trim($_POST['username']));
     $password1 = mysqli_real_escape_string($dbc, trim($_POST['password1']));
