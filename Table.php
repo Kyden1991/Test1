@@ -1,4 +1,9 @@
 <?php
+$dbc = mysqli_connect('localhost', 'root', '', 'Test2');
+
+if($dbc) {
+    echo "подключился";
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,13 +22,21 @@
 </header>
 <content>
     <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-        <label for="username">Введите ваш логин:</label>
-        <input type="text" name="username">
-        <label for="password">Введите ваш пароль:</label>
-        <input type="password" name="password1">
-        <label for="password">Введите пароль еще раз:</label>
-        <input type="password" name="password2">
-        <button type="submit" name="submit">Вход</button>
+        <?php
+
+       $select = mysqli_query("SELECT * FROM Test2");
+       if($select) {
+           echo "sdsdsd";
+       }
+
+       while($result = mysqli_fetch_array($select)) {
+           echo "
+           user_id: $result[user_id];
+           username: $result[username];
+           
+           ";
+       }
+        ?>
     </form>
 </content>
 <footer class="clear">
