@@ -1,5 +1,7 @@
 <?php
-require "db.php"
+require "db.php";
+
+$data = $_POST;
 ?>
 <!DOCTYPE html>
 <html>
@@ -18,13 +20,8 @@ require "db.php"
 </header>
 <content>
         <?php
-        $sql = "SELECT * FROM signUp";
-        $result = "$connect->query($sql)";
+        R::getAll( 'SELECT * FROM Test2' );
 
-        if ($result-> num_rows >0) {
-            while ($row = $result-> fetch_assoc());
-            echo "<br> id:". $row["user_id"]. "<br> username:". $row["username"]. "<br> password:". $row["password"];
-        };
 
 
 

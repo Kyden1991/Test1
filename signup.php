@@ -1,25 +1,47 @@
 <?php
-$dbc = mysqli_connect('localhost', 'root', '', 'Test2') OR DIE('Ошибка подключения к базе данных');
-if(isset($_POST['submit'])){
-    $username = mysqli_real_escape_string($dbc, trim($_POST['username']));
-    $password1 = mysqli_real_escape_string($dbc, trim($_POST['password1']));
-    $password2 = mysqli_real_escape_string($dbc, trim($_POST['password2']));
-    if(!empty($username) && !empty($password1) && !empty($password2) && ($password1 == $password2)) {
-        $query = "SELECT * FROM `signUp` WHERE username = '$username'";
-        $data = mysqli_query($dbc, $query);
-        if(mysqli_num_rows($data) == 0) {
-            $query ="INSERT INTO `signup` (username, password) VALUES ('$username', SHA('$password2'))";
-            mysqli_query($dbc,$query);
-            echo 'All ready, go to auth';
-            mysqli_close($dbc);
-            exit();
-        }
-        else {
-            echo 'Alreay exist';
-        }
+require "db.php";
 
+$data = $_POST;
+if(isset($data['submit'])) {
+
+    //тут регистрация
+    $errors = array();
+    if( trim($data['login']) == '') {
+        $errors[] = 'Введите логин!';
     }
+    if( trim($data['email']) == '') {
+        $errors[] = 'Введите email!';
+    }
+    if( $data['password'] == '') {
+        $errors[] = 'Введите пароль!';
+    }
+    if( $data['password2'] != $data['password'] ) {
+        $errors[] = 'Повторный пароль введен не верно!';
+    }
+    if( R:: count('users', "login = ?", array($data['login'])) >0 ) {
+        $errors[] = 'Такой логин уже существует!';
+    }
+    if( R:: count('users', "email = ?", array($data['email'])) >0 ) {
+        $errors[] = 'Такой email уже существует!';
+    }
+
+    if (empty($errors)) {
+        // все хорошо можно регестрировать
+        $user = R::dispense('users');
+        $user->login = $data['login'];
+        $user->email = $data['email'];
+        $user->password = md5($data['password']);
+        $user->join_date = time();
+        R::store($user);
+        echo '<div style="color: green;">Ура!</div><hr>';
+
+    } else{
+        echo '<div style="color: red;">'.array_shift($errors).'</div><hr>';
+    }
+    
+    
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -38,13 +60,15 @@ if(isset($_POST['submit'])){
 </header>
 <content>
     <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-        <label for="username">Введите ваш логин:</label>
-        <input type="text" name="username">
+        <label for="login">Введите ваш логин:</label>
+        <input type="text" name="login" value="<?php echo @$data['login'];?>">
+        <label for="email">Введите ваш email:</label>
+        <input type="text" name="email" value="<?php echo @$data['email'];?>">
         <label for="password">Введите ваш пароль:</label>
-        <input type="password" name="password1">
+        <input type="password" name="password" value="<?php echo @$data['password'];?>">
         <label for="password">Введите пароль еще раз:</label>
-        <input type="password" name="password2">
-        <button type="submit" name="submit">Вход</button>
+        <input type="password" name="password2" value="<?php echo @$data['password2'];?>">
+        <button type="submit" name="submit">Регистрация</button>
     </form>
 </content>
 <footer class="clear">

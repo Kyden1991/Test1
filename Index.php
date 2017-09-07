@@ -1,29 +1,39 @@
 <?php
-$dbc = mysqli_connect('localhost', 'root', '', 'Test2');
-if(!isset($_COOKIE['user_id'])) {
-    if(isset($_POST['submit'])) {
-        $user_username = mysqli_real_escape_string($dbc, trim($_POST['username']));
-        $user_password = mysqli_real_escape_string($dbc, trim($_POST['password']));
-        if(!empty($user_username) && !empty($user_password)) {
-            $query = "SELECT `user_id` , `username` FROM `signUp` WHERE username = '$user_username' AND password = SHA('$user_password')";
-            $data = mysqli_query($dbc,$query);
-            if(mysqli_num_rows($data) == 1) {
-                $row = mysqli_fetch_assoc($data);
-                setcookie('user_id', $row['user_id'], time() + (60*60*24*30));
-                setcookie('username', $row['username'], time() + (60*60*24*30));
-                setcookie('password', $row['password'], time() + (60*60*24*30));
-                $home_url = 'http://' . $_SERVER['HTTP_HOST'];
-                header('Location: '. $home_url);
-            }
-            else {
-                echo 'Извините, вы должны ввести правильные имя пользователя и пароль';
-            }
+require "db.php";
+
+$data = $_POST;
+
+if(isset($data['submit'])) {
+
+    $errors = array();
+    $user = R:: findOne('users', 'login = ?', array($data['login']));
+    var_dump($user);
+    if ( $user ) {
+    //логин существует
+        if(password_verify($data['password'], $user->password)) {
+            //если Серега поможет то логиним юзера
+            $_SESSION['logged_user']=$user;
+            echo '<div style="color: green;">Ура!</div><hr>';
+
+        }else {
+            $errors[] = 'Неверный пороль!';
         }
-        else {
-            echo 'Извините вы должны заполнить поля правильно';
-        }
+
+    }else {
+        $errors[] = 'Пользователь с таким именем не найден!';
     }
+    if (!empty($errors)) {
+        echo '<div style="color: red;">'.array_shift($errors).'</div><hr>';
+    }
+    if (isset($_SESSION['logged_user'])) {
+        echo 'Авторизован';
+    }else {
+        echo 'Авторизуйтесь';
+    }
+
 }
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -69,7 +79,7 @@ if(!isset($_COOKIE['user_id'])) {
 </content>
 <section>
     <?php
-    if(empty($_COOKIE['username'])) {
+    if(empty($_COOKIE['login'])) {
         ?>
         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
             <label for="username">Логин:</label>
@@ -84,7 +94,7 @@ if(!isset($_COOKIE['user_id'])) {
     else {
         ?>
         <p><a href="myprofile.php">Мой профиль</a></p>
-        <p><a href="exit.php">Выйти(<?php echo $_COOKIE['username']; ?>)</a></p>
+        <p><a href="exit.php">Выйти(<?php echo $_COOKIE['login']; ?>)</a></p>
         <?php
     }
     ?>
