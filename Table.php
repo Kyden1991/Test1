@@ -1,6 +1,5 @@
 <?php
-$dbc = mysqli_connect('localhost', 'root', '', 'Test2');
-
+require "db.php"
 ?>
 <!DOCTYPE html>
 <html>
@@ -11,8 +10,8 @@ $dbc = mysqli_connect('localhost', 'root', '', 'Test2');
 <body>
 <header>
     <ul>
-        <li><a href="/">Главная</a></li>
-        <li><a href="/">Новости</a></li>
+        <li><a href="Index.php">Главная</a></li>
+        <li><a href="Table.php">Таблица</a></li>
         <li><a href="/">Музыка</a></li>
         <li><a href="/">Обратная связь</a></li>
     </ul>

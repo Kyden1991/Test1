@@ -11,6 +11,7 @@ if(!isset($_COOKIE['user_id'])) {
                 $row = mysqli_fetch_assoc($data);
                 setcookie('user_id', $row['user_id'], time() + (60*60*24*30));
                 setcookie('username', $row['username'], time() + (60*60*24*30));
+                setcookie('password', $row['password'], time() + (60*60*24*30));
                 $home_url = 'http://' . $_SERVER['HTTP_HOST'];
                 header('Location: '. $home_url);
             }
