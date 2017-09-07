@@ -1,9 +1,6 @@
 <?php
 $dbc = mysqli_connect('localhost', 'root', '', 'Test2');
 
-if($dbc) {
-    echo "подключился";
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,21 +18,17 @@ if($dbc) {
     </ul>
 </header>
 <content>
-    <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
         <?php
+        $sql = "SELECT * FROM signUp";
+        $result = "$connect->query($sql)";
 
-       $select = mysqli_query("SELECT * FROM Test2");
-       if($select) {
-           echo "sdsdsd";
-       }
+        if ($result-> num_rows >0) {
+            while ($row = $result-> fetch_assoc());
+            echo "<br> id:". $row["user_id"]. "<br> username:". $row["username"]. "<br> password:". $row["password"];
+        };
 
-       while($result = mysqli_fetch_array($select)) {
-           echo "
-           user_id: $result[user_id];
-           username: $result[username];
-           
-           ";
-       }
+
+
         ?>
     </form>
 </content>
