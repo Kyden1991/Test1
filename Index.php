@@ -97,7 +97,7 @@ if(isset($data['submit'])) {
             <input type="text" name="username">
             <label for="password">Пароль:</label>
             <input type="password" name="password">
-            <button type="submit" name="submit">Вход</button>
+            <button type="submit" name="submit"><a href="myprofile.php">Вход</a></button>
             <a href="signup.php">Регистрация</a>
         </form>
     <?php
