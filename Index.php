@@ -1,19 +1,23 @@
 <?php
 require "db.php";
+//require_once 'exit.php';
 
 $data = $_POST;
+
 
 if(isset($data['submit'])) {
 
     $errors = array();
-    $user = R:: findOne('users', 'login = ?', array($data['login']));
-    var_dump($user);
+    $user = R:: findOne('users', 'login = ?', array($data['username']));
+
     if ( $user ) {
     //логин существует
-        if(password_verify($data['password'], $user->password)) {
+
+        if(md5($data['password'], $user->password)) {
             //если Серега поможет то логиним юзера
             $_SESSION['logged_user']=$user;
             echo '<div style="color: green;">Ура!</div><hr>';
+            //кука
 
         }else {
             $errors[] = 'Неверный пороль!';
@@ -25,11 +29,7 @@ if(isset($data['submit'])) {
     if (!empty($errors)) {
         echo '<div style="color: red;">'.array_shift($errors).'</div><hr>';
     }
-    if (isset($_SESSION['logged_user'])) {
-        echo 'Авторизован';
-    }else {
-        echo 'Авторизуйтесь';
-    }
+
 
 }
 
@@ -77,10 +77,21 @@ if(isset($data['submit'])) {
     </div>
 
 </content>
+
+
 <section>
+<?php
+    if (isset($_SESSION['logged_user'])) {
+    echo 'Авторизован';
+    ?>
+    <p><a href="myprofile.php">Мой профиль</a></p>
+    <p><a href="exit.php">Выйти</a></p>
     <?php
-    if(empty($_COOKIE['login'])) {
-        ?>
+    }else {
+    echo 'Авторизуйтесь';
+?>
+
+
         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
             <label for="username">Логин:</label>
             <input type="text" name="username">
@@ -89,15 +100,11 @@ if(isset($data['submit'])) {
             <button type="submit" name="submit">Вход</button>
             <a href="signup.php">Регистрация</a>
         </form>
-        <?php
+    <?php
     }
-    else {
-        ?>
-        <p><a href="myprofile.php">Мой профиль</a></p>
-        <p><a href="exit.php">Выйти(<?php echo $_COOKIE['login']; ?>)</a></p>
-        <?php
-    }
-    ?>
+?>
+
+
 </section>
 
 

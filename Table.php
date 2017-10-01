@@ -1,7 +1,6 @@
 <?php
 require "db.php";
 
-$data = $_POST;
 ?>
 <!DOCTYPE html>
 <html>
@@ -20,12 +19,46 @@ $data = $_POST;
 </header>
 <content>
         <?php
-        R::getAll( 'SELECT * FROM Test2' );
 
-
-
+        //$table = R::getAll( 'SELECT * FROM Test2' );
+// надо вывести echo
+        
 
         ?>
+<?php
+
+    $hostname = 'localhost';
+    $username = 'root';
+    $passwordname = '';
+    $basename = 'Test2';
+    $conn = new mysqli($hostname, $username, $passwordname, $basename) or die       ('Невозможно открыть базу');
+
+$sql = "SELECT * FROM `users`";
+
+//$result - ассоциированный массив, т.е. таблички, у которой есть названия столбцов
+
+
+//вывод на страничку в виде таблицы
+echo "<table border=1> 
+<tr><th>login</th><th>email</th></tr>";
+
+
+$result = $conn->query($sql);
+// В цикле перебираем все записи таблицы и выводим их
+while ($row = $result->fetch_assoc())
+{
+    echo
+    "<tr><td>",'Логин: '.$row['login'],
+    "</td><td>",'Мыло: '.$row['email'],
+
+    "</td></tr>";
+    echo "</table>";
+}
+
+
+
+
+?>
     </form>
 </content>
 <footer class="clear">

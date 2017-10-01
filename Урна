@@ -11,6 +11,7 @@ if(!isset($_COOKIE['id'])) {
                 setcookie('id', $row['id'], time() + (60*60*24*30));
                 setcookie('login', $row['login'], time() + (60*60*24*30));
                 setcookie('password', $row['password'], time() + (60*60*24*30));
+                setcookie('email', $row['email'], time() + (60*60*24*30));
                 $home_url = 'http://' . $_SERVER['HTTP_HOST'];
                 header('Location: '. $home_url);
             }
@@ -23,3 +24,70 @@ if(!isset($_COOKIE['id'])) {
         }
     }
 }
+
+//старый выход и форма входа
+ <?php
+    if(empty($_COOKIE['login'])) {
+        ?>
+        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+            <label for="username">Логин:</label>
+            <input type="text" name="username">
+            <label for="password">Пароль:</label>
+            <input type="password" name="password">
+            <button type="submit" name="submit">Вход</button>
+            <a href="signup.php">Регистрация</a>
+        </form>
+        <?php
+    }
+    else {
+        ?>
+        <p><a href="myprofile.php">Мой профиль</a></p>
+        <p><a href="exit.php">Выйти(<?php echo $_COOKIE['login']; ?>)</a></p>
+        <?php
+    }
+    ?>
+    //старый выход
+    unset($_COOKIE['id']);
+    unset($_COOKIE['login']);
+    setcookie('id', '', -1, '/');
+    setcookie('login', '', -1, '/');
+    $home_url = 'http://' . $_SERVER['HTTP_HOST'];
+    header('Location: ' . $home_url);
+
+
+
+
+
+
+
+
+
+//вопросы
+1) проблема с бд (авторизация и вывод информации из нее)
+2)куки и сессия (если заработает проверить на работоспособность)
+3)общие вопросы: 1)вынести проверку соответствия пароля пользователя в отдельный класс 2)как должен строится профиль юзера 3)сколько из этого сделано и сдлано ли верно
+
+
+
+таблица:
+ // Формируем запрос из таблицы с именем blog
+    $sql = "SELECT * FROM `users`";
+    $result = $conn->query($sql);
+    // В цикле перебираем все записи таблицы и выводим их
+    while ($row = $result->fetch_assoc())
+    {
+    // Оператором echo выводим на экран поля таблицы name_blog и text_blog
+        echo "<tr>";
+    echo 'Логин: '.$row['login'];
+    echo 'Мыло: '.$row['email'];
+    }
+
+
+    //вывод построчно
+        echo
+        "<tr><td>",mysqli_result($result,$i,id),
+        "</td><td>",mysqli_result($result,$i,data),
+        "</td><td>",mysqli_result($result,$i,name),
+        "</td><td>",mysqli_result($result,$i,harakter),
+        "</td></tr>";
+    echo "</table>";
